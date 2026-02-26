@@ -1,0 +1,25 @@
+import fs from "fs-extra";
+import path from "path";
+
+const MODE_FILE = "botmode.json";
+
+export async function getBotMode(sessionPath) {
+  try {
+    const file = path.join(sessionPath, MODE_FILE);
+    if (!(await fs.pathExists(file))) return "boy";
+    const data = await fs.readJSON(file);
+    return data?.mode || "boy";
+  } catch {
+    return "boy";
+  }
+}
+
+export async function setBotMode(sessionPath, mode) {
+  try {
+    const file = path.join(sessionPath, MODE_FILE);
+    await fs.writeJSON(file, { mode: mode.toLowerCase() }, { spaces: 2 });
+    return true;
+  } catch {
+    return false;
+  }
+}
